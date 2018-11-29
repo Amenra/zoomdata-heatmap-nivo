@@ -1,0 +1,91 @@
+{
+  "name": "zoomdata-heatmap-nivo",
+  "enabled": true,
+  "controls": [
+    "UberStyle",
+    "DirtyDataIndicator",
+    "Color",
+    "FiltersIndicator",
+    "Undo",
+    "Info",
+    "TimePlayer",
+    "Filters",
+    "Defaults",
+    "Bookmark",
+    "Sort",
+    "Zoom",
+    "NoDataIndicator",
+    "TimeTable",
+    "Share",
+    "Download"
+  ],
+  "objectFieldTypes": [
+    "TIME",
+    "NUMBER",
+    "MONEY",
+    "ATTRIBUTE",
+    "INTEGER"
+  ],
+  "variables": [
+    {
+      "name": "Multi Group By",
+      "type": "multi-group",
+      "descr": "",
+      "attributeType": [
+        "ATTRIBUTE",
+        "TIME"
+      ],
+      "defaultValue": "",
+      "colorMetric": false,
+      "colorNumb": 0,
+      "config": {
+        "groupLevel": 2,
+        "groupNames": [
+          "Group 1",
+          "Group 2"
+        ],
+        "groupLimits": [
+          50,
+          20
+        ],
+        "groupTypes": [
+          "ATTRIBUTE TIME",
+          "NONE ATTRIBUTE TIME"
+        ]
+      }
+    },
+    {
+      "name": "Color Metric",
+      "type": "metric",
+      "descr": "",
+      "attributeType": [
+        "MONEY",
+        "INTEGER",
+        "NUMBER"
+      ],
+      "defaultValue": [
+        {
+          "name": "count",
+          "colorConfig": {
+            "autoShowColorLegend": true
+          }
+        }
+      ],
+      "colorMetric": false,
+      "colorNumb": 2,
+      "metricType": "color",
+      "legendType": "palette",
+      "colorSet": "ZoomSequential",
+      "required": false
+    },
+    {
+      "name": "Show Metric Values",
+      "type": "bool",
+      "defaultValue": true,
+      "colorMetric": false,
+      "colorNumb": 0,
+      "required": false
+    }
+  ],
+  "templateType": "HEAT_MAP"
+}
