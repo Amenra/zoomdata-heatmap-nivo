@@ -1,6 +1,13 @@
 {
-  "name": "zoomdata-heatmap-nivo",
+  "name": "Nivo Heat Map",
   "enabled": true,
+  "objectFieldTypes": [
+    "TIME",
+    "NUMBER",
+    "MONEY",
+    "ATTRIBUTE",
+    "INTEGER"
+  ],
   "controls": [
     "UberStyle",
     "DirtyDataIndicator",
@@ -18,13 +25,6 @@
     "TimeTable",
     "Share",
     "Download"
-  ],
-  "objectFieldTypes": [
-    "TIME",
-    "NUMBER",
-    "MONEY",
-    "ATTRIBUTE",
-    "INTEGER"
   ],
   "variables": [
     {
@@ -50,14 +50,14 @@
         ],
         "groupTypes": [
           "ATTRIBUTE TIME",
-          "NONE ATTRIBUTE TIME"
+          "ATTRIBUTE TIME NONE"
         ]
-      }
+      },
+      "required": true
     },
     {
       "name": "Color Metric",
       "type": "metric",
-      "descr": "",
       "attributeType": [
         "MONEY",
         "INTEGER",
@@ -86,6 +86,5 @@
       "colorNumb": 0,
       "required": false
     }
-  ],
-  "templateType": "HEAT_MAP"
+  ]
 }

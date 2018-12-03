@@ -7,14 +7,18 @@
   ],
   "main": "visualization.js",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack --mode production",
     "start": "webpack --mode development --watch",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@babel/core": "7.1.6",
-    "@babel/preset-react": "7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "@nivo/core": "^0.51.0",
     "babel-loader": "8.0.4",
+    "eslint": "^5.9.0",
+    "eslint-plugin-react": "^7.11.1",
     "webpack": "4.26.1",
     "webpack-cli": "3.1.2"
   },
