@@ -8,12 +8,13 @@ module.exports = {
         rules: [
             {
                 test: /(\.js|\.jsx)?$/,
+                resolve: { extensions: ['.js', '.jsx'] },
                 exclude: /node_modules/,
                 loader: 'babel-loader',
                 options: {
-                    "presets": ["@babel/react"],
-                    "plugins": [
-                        ["@babel/plugin-proposal-class-properties", { "loose": true }]
+                    'presets': ['@babel/react'],
+                    'plugins': [
+                        ['@babel/plugin-proposal-class-properties', { 'loose': true }]
                     ]
                 }
             }

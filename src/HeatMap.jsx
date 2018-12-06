@@ -7,6 +7,10 @@ const __BAD_PADDING = 10;
 import React from 'react';
 import { findDOMNode } from 'react-dom';
 import { ResponsiveHeatMapCanvas } from '@nivo/heatmap';
+import Tooltip from './Tooltip';
+
+const multiGroupAccessor = controller.dataAccessors['Multi Group By'];
+const colorMetricAccessor = controller.dataAccessors['Color Metric'];
 
 controller.state.initIfEmpty(
     'ShowMetricValues',
@@ -27,7 +31,7 @@ controller.createAxisLabel({
     position: 'bottom'
 });
 
-function getChartData(data, multiGroupAccessor, metricAccessor) {
+function getChartData(data) {
     // Get unique first group values
     const rows = [
         ...new Set(data.map(datum => multiGroupAccessor.formatted(datum, 0)))
@@ -43,7 +47,7 @@ function getChartData(data, multiGroupAccessor, metricAccessor) {
         const firstGroup = multiGroupAccessor.formatted(datum, 0);
         const secondGroup = multiGroupAccessor.formatted(datum, 1);
         const item = dataMap.get(firstGroup);
-        item[secondGroup] = metricAccessor.raw(datum);
+        item[secondGroup] = colorMetricAccessor.raw(datum);
     }
 
     return [...dataMap].map(([id, item]) => ({ ...item, id }));
@@ -84,13 +88,9 @@ export default class HeatMap extends React.Component {
         this.HeatMapContainerRef = React.createRef();
 
         controller.update = controllerProvidedData => {
-            const multiGroupAccessor = controller.dataAccessors['Multi Group By'];
-            const metricAccessor = controller.dataAccessors['Color Metric'];
-
-            const data = getChartData(controllerProvidedData, multiGroupAccessor, metricAccessor);
+            const data = getChartData(controllerProvidedData);
             const columns = getColumns(multiGroupAccessor);
-            const colors = multiGroupAccessor.getColorRange();
-
+            const colors = colorMetricAccessor.colorRange();
             const left = getMaxCanvasTextWidth(data.map(({ id }) => id));
             const top = getMaxCanvasTextWidth(columns);
 
@@ -111,6 +111,7 @@ export default class HeatMap extends React.Component {
         const clickedGroup = clickedCell.yKey + clickedCell.xKey;
         const { left, top, controllerProvidedData } = this.state;
 
+        // TODO: Finder does not work for fieldes where title != value so it should be mapped
         const data = controllerProvidedData.find( dataum => dataum.group.join('') === clickedGroup );
         const canvas = findDOMNode(this.HeatMapContainerRef.current).getBoundingClientRect();
 
@@ -159,6 +160,20 @@ export default class HeatMap extends React.Component {
                                 cellHoverOthersOpacity={0.95}
                                 hoverTarget="cell"
                                 onClick={this.showRadialMenu.bind(this)}
+                                tooltip={function(item){
+                                    const groups = multiGroupAccessor.getGroups()
+                                    const [ { label: yGroupTitle }, { label: xGroupTitle } ] = groups
+
+                                    const metric = colorMetricAccessor.getMetric()
+                                    const { label: metricTitle } = metric
+                                    return <Tooltip { ...({
+                                        ...item,
+                                        value: item.value || 'No data',
+                                        xGroupTitle,
+                                        yGroupTitle,
+                                        metricTitle
+                                    }) } />;
+                                }}
 
                                 // Works only if remove memoize function from the Nivo source code
                                 // getLabelTextColor={function(node){
