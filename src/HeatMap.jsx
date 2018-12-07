@@ -72,6 +72,7 @@ function getMaxCanvasTextWidth(texts) { // TODO: Move into utilities
 }
 
 const defaultState = {
+    rawData: [],
     data: [],
     columns: [],
     colors: [],
@@ -87,15 +88,15 @@ export default class HeatMap extends React.Component {
 
         this.HeatMapContainerRef = React.createRef();
 
-        controller.update = controllerProvidedData => {
-            const data = getChartData(controllerProvidedData);
+        controller.update = rawData => {
+            const data = getChartData(rawData);
             const columns = getColumns(multiGroupAccessor);
             const colors = colorMetricAccessor.colorRange();
             const left = getMaxCanvasTextWidth(data.map(({ id }) => id));
             const top = getMaxCanvasTextWidth(columns);
 
             this.setState({
-                controllerProvidedData,
+                rawData,
                 data,
                 columns,
                 colors,
@@ -108,16 +109,18 @@ export default class HeatMap extends React.Component {
     showRadialMenu(clickedCell) {
         if (!clickedCell.value) return;
 
-        const clickedGroup = clickedCell.yKey + clickedCell.xKey;
-        const { left, top, controllerProvidedData } = this.state;
+        const { left, top, rawData } = this.state;
+        const canvasPosition = findDOMNode(this.HeatMapContainerRef.current).getBoundingClientRect();
+        const data = rawData.find(datum => {
+            const yGroup = multiGroupAccessor.formatted(datum, 0);
+            const xGroup = multiGroupAccessor.formatted(datum, 1);
 
-        // TODO: Finder does not work for fieldes where title != value so it should be mapped
-        const data = controllerProvidedData.find( dataum => dataum.group.join('') === clickedGroup );
-        const canvas = findDOMNode(this.HeatMapContainerRef.current).getBoundingClientRect();
+            return yGroup === clickedCell.yKey && xGroup === clickedCell.xKey;
+        });
 
         controller.menu.show({
-            x: canvas.x + clickedCell.x + left,
-            y: canvas.y + clickedCell.y + top,
+            x: canvasPosition.x + clickedCell.x + left,
+            y: canvasPosition.y + clickedCell.y + top,
             data: () => data
         });
     }
